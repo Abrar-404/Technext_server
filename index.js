@@ -9,11 +9,7 @@ const port = process.env.PORT || 5000;
 // middleware
 app.use(
   cors({
-    origin: [
-      'http://localhost:5173',
-      'http://localhost:5000',
-      'https://task-management-cfbc8.web.app',
-    ],
+    origin: ['http://localhost:5173', 'http://localhost:5000'],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
@@ -40,87 +36,30 @@ async function run() {
     // await client.connect();
 
     // users, admin and moderator related
-    const usersCollection = client.db('jobtask').collection('users');
-    const taskcollection = client.db('jobtask').collection('task');
+    const usersCollection = client.db('Usify').collection('users');
 
-    app.get('/addtask', async (req, res) => {
-      const result = await taskcollection.find().toArray();
+    app.get('/users', async (req, res) => {
+      const result = await usersCollection.find().toArray();
       res.send(result);
     });
 
-    // app.get('/addtask', async (req, res) => {
-    //   const email = req.query.email;
-    //   const query = { email: email };
-    //   const result = await taskcollection
-    //     .find(query)
-    //     .sort({ priority: 1 })
-    //     .toArray();
-    //   res.send(result);
-    // });
-    // app.get('/tasks', async (req, res) => {
-    //   const email = req.query.email;
-    //   const query = { email: email };
-    //   const result = await taskcollection
-    //     .find(query)
-    //     .sort({ priority: 1 })
-    //     .toArray();
-    //   res.send(result);
-    // });
-
-    app.post('/addtask', async (req, res) => {
-      const taskadd = req.body;
-      const data = {
-        title: taskadd.title,
-        description: taskadd.description,
-        date: taskadd.date,
-        priority: taskadd.priority,
-        status: 'todo',
-      };
-      const result = await taskcollection.insertOne(data);
-      res.send(result);
-    });
-
-    app.patch('/status', async (req, res) => {
-      const id = req.query.id;
-      const data = req.body;
+    app.get('/users/:id', async (req, res) => {
+      const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const updatedDoc = {
-        $set: {
-          status: data.status,
-        },
-      };
-      const result = await taskcollection.updateOne(query, updatedDoc);
+      const result = await usersCollection.findOne(query);
       res.send(result);
     });
 
-    app.delete('/delete', async (req, res) => {
-      const id = req.query.id;
-      console.log(id);
+    app.post('/users', async (req, res) => {
+      const data = req.body;
+      const result = await usersCollection.insertOne(data);
+      res.send(result);
+    });
+
+    app.delete('/users/:id', async (req, res) => {
+      const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await taskcollection.deleteOne(query);
-      res.send(result);
-    });
-
-    app.put('/update', async (req, res) => {
-      const id = req.query.id;
-      const filter = { _id: new ObjectId(id) };
-      const data = req.body;
-      const updatedDoc = {
-        $set: {
-          title: data.title,
-          description: data.description,
-          priority: data.priority,
-          deadline: data.deadline,
-          email: data.email,
-        },
-      };
-      const result = await taskcollection.updateOne(filter, updatedDoc);
-      res.send(result);
-    });
-
-    app.post('/task', async (req, res) => {
-      const data = req.body;
-      const result = await taskcollection.insertOne(data);
+      const result = await usersCollection.deleteOne(query);
       res.send(result);
     });
 
