@@ -43,18 +43,18 @@ async function run() {
       res.send(result);
     });
 
-    // app.get('/users/:id', async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: new ObjectId(id) };
-    //   const result = await usersCollection.findOne(query);
-    //   res.send(result);
-    // });
-
-    app.post('/users', async (req, res) => {
-      const data = req.body;
-      const result = await usersCollection.insertOne(data);
+    app.get('/users/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await usersCollection.findOne(query);
       res.send(result);
     });
+
+    // app.post('/users', async (req, res) => {
+    //   const data = req.body;
+    //   const result = await usersCollection.insertOne(data);
+    //   res.send(result);
+    // });
 
     app.delete('/users/:id', async (req, res) => {
       const id = req.params.id;
