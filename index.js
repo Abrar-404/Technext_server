@@ -50,18 +50,18 @@ async function run() {
       res.send(result);
     });
 
-    // app.post('/users', async (req, res) => {
-    //   const data = req.body;
-    //   const result = await usersCollection.insertOne(data);
-    //   res.send(result);
-    // });
-
-    app.delete('/users/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await usersCollection.deleteOne(query);
+    app.post('/users', async (req, res) => {
+      const data = req.body;
+      const result = await usersCollection.insertOne(data);
       res.send(result);
     });
+
+    // app.delete('/users/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: new ObjectId(id) };
+    //   const result = await usersCollection.deleteOne(query);
+    //   res.send(result);
+    // });
 
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 });
